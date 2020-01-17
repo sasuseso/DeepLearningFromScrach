@@ -11,18 +11,17 @@ function init_network()
 				return pickle.loads(pybytes(read("/home/sasuseso/Scripts/sample_weight.pkl")))
 end
 
-function predict(network, X)
+function predict(network, x)
 				W1, W2, W3 = network["W1"]', network["W2"]', network["W3"]'
 				b1, b2, b3 = network["b1"], network["b2"], network["b3"]
-				x = vec(X)
 
-				a1 = W1 * x + b1
+				a1 = W1 * x .+ b1
 				z1 = sigmoid(a1)
 
-				a2 = W2 * z1 + b2
+				a2 = W2 * z1 .+ b2
 				z2 = sigmoid(a2)
 
-				a3 = W3 * z2 + b3
+				a3 = W3 * z2 .+ b3
 
 				y = softmax(a3)
 
@@ -35,12 +34,11 @@ network = init_network()
 batch_size = 100
 accuracy_cnt = 0
 
-for i = 1:10000
-								y = predict(network, x[:, :, i])
-								p = argmax(vec(y))
-								if p-1 == t[i]
-																global accuracy_cnt += 1
-								end
+for i = 1:100:10000
+								x_batch = reshape(x[:, :, i:i+batch_size-1], (784, 100))
+								y_batch = predict(network, x_batch)
+								p = [argmax(y_batch[:, i])-1 for i in 1:100]
+								global accuracy_cnt += count(p .== t[i:i+batch_size-1])
 end
 
 println("Accuracy: $(accuracy_cnt / 10000)")

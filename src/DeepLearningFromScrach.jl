@@ -1,8 +1,9 @@
 module DeepLearningFromScrach
+export step_function, sigmoid, rectified_linear_unit, identity_function, softmax
 
 step_function(x::Vector) = x .> 0
 
-sigmoid(x::Array{Float64, 2}) = 1 ./ (1 .+ exp.(-x))
+sigmoid(x) = 1 ./ (1 .+ exp.(-x))
 
 rectified_linear_unit(x) = max.(0, x)
 
