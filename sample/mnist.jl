@@ -29,6 +29,9 @@ function predict(network, X)
 				y
 end
 
+# cross_entropy_error(y, t) = -sum(t' .* log.(y')) / size(y)[1]
+cross_entropy_error(y::Array{Float64}, t::Vector{Int}) = -sum(t' .* log.(y'[collect(1:size(y)[1]), t])) / size(y)[1]
+cross_entropy_error(y::Array{Float64, 2}, t::Array{Bool, 2}) = -sum(t' .* log.(y')) / size(y)[1]
 x, t = get_data()
 network = init_network()
 
