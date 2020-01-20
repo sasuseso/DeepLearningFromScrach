@@ -9,7 +9,14 @@ rectified_linear_unit(x) = max.(0, x)
 
 identity_function(x) = x
 
-softmax(a::Array) = exp.(a .- maximum(a)) / sum(exp.(a .- maximum(a)))
+function softmax(a::AbstractArray{N, 2}) where N
+								x = a'
+								x .-= maximum(x, dims=0)
+
+								exp.(x) / sum(exp.(x), dims=1)
+end
+
+softmax(a::AbstractVector) = exp.(a .- maximum(a)) / sum(exp.(a .- maximum(a)))
 
 function cross_entropy_error(y::Array{Float64, 2}, t::Vector{Int})
 								batch_size = size(y)[1]
